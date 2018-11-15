@@ -58,17 +58,6 @@ Note: Make sure that at least 1 LDAP user is in Mattermost or the sync will not 
 
 To configure AD/LDAP synchronization with SAML sign-in, see the [SAML documentation](https://about.mattermost.com/default-saml-ldap-sync).
 
-#### Configure AD/LDAP deployments with multiple domains
-
-Organizations using multiple domains can integrate with Mattermost using a "Forest" configuration to bring together multiple domains. Please see [Forests as Collections of Domain Controllers that Trust Each Other](https://technet.microsoft.com/en-us/library/cc759073%28v=ws.10%29.aspx?f=255&MSPPError=-2147217396) for more information.
-
-For forest configurations that contain multiple domains which do NOT share a common root, you can search across all of the domains using the Global Catalog. To do so, update your config.json as follows:
-
-1. Set the LdapPort to 3268 (instead of 389)
-2. Set the BaseDN to " " (A single space character)
-
-See [Global Catalog and LDAP Searches](https://technet.microsoft.com/en-us/library/cc978012.aspx) for additional details.
-
 ### Troubleshooting / FAQ
 
 The following are frequently asked questions and troubleshooting suggestions on common error messages and issues. It is recommendeded that you check your logs for errors as they can provide an idea of what the issue is.
@@ -124,7 +113,7 @@ For Active Directory, to filter out deactivated users you must set the user filt
 
 #### Can I connect to multiple Active Directory servers? 
 
-There is currently no built-in way to connect to multiple AD servers. You will need to connect the instances in a forest before connecting to Mattermost.
+There is currently no built-in way to connect to multiple AD servers.
 
 Consider upvoting the [feature request](https://mattermost.uservoice.com/forums/306457-general/suggestions/13589904-add-the-abilitiry) on our forum.
 
@@ -166,6 +155,19 @@ Note: Currently the value is case sensitive. If the **ID attribute** is set to t
 This indicates your AD/LDAP server configuration has a maximum page size set and the query coming from Mattermost is returning a result set in excess of that limit.
 
 To address this issue you can set the [max page size](https://docs.mattermost.com/administration/config-settings.html#maximum-page-size) in your Mattermost configuration to match the limit on your AD/LDAP server. This will return a sequence of result sets that do not exceed the max page size, rather than returning all results in a single query.
+
+If the error is still occurring, it is likely that no AD/LDAP users have logged into Mattermost yet. Ensure that at least 1 AD/LDAP user has logged into Mattermost and re-run the sync. The error should disappear at that point.
+
+#### Where can I find help on AD/LDAP configuration settings in config.json?
+
+You can find an explanation of each of the configuration settings [here](https://docs.mattermost.com/administration/config-settings.html#ad-ldap).
+
+#### Can the AD/LDAP User Filter read Security groups?
+
+Yes it can, but make sure that:
+ - permissions are correctly configured on the service account you are using
+ - each user object is a direct member of the security group
+m-page-size) in your Mattermost configuration to match the limit on your AD/LDAP server. This will return a sequence of result sets that do not exceed the max page size, rather than returning all results in a single query.
 
 If the error is still occurring, it is likely that no AD/LDAP users have logged into Mattermost yet. Ensure that at least 1 AD/LDAP user has logged into Mattermost and re-run the sync. The error should disappear at that point.
 
